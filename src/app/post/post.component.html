@@ -1,0 +1,55 @@
+<app-header></app-header>
+<ul fxLayoutAlign="center" fxLayout="row">
+  <li class="searchField" fxFlex="40%">
+    <input type="text" id="search" class="searchBox" (keyup)="onChange($event.target.value)" placeholder="search title, author name here">
+  </li>
+  <li>
+    <mat-form-field>
+      <mat-select placeholder="Select Category">
+        <mat-option *ngFor="let sort of posts" [value]="sort.category" (click)="onCategorySelect(sort.category)">
+          {{ sort.category }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </li>
+</ul>
+<div fxLayout="row" fxLayoutWrap>
+  <div fxLayoutAlign="center" fxFlexFill >
+    <mat-list fxFlex class="books">
+      <mat-card *ngFor="let post of (posts | name : searchResult | filter: categoryResult)" class="cardList">
+         <figure fxFlex>
+            <img src="{{post.image}}" alt="">
+         </figure> 
+         <div fxFlex="80%">
+            <h4 class="card-title">
+                <b>Title:</b>{{ post.title }}</h4>
+              <h6 class="card-author">
+                <b>Author:</b>{{post.author}}</h6>
+              <p class="card-isbn">
+                <b>ISBN:</b>{{post.isbn}}</p>
+              <p class="card-desc">
+                <b>Description:</b>{{post.description}}</p>
+              
+              <star-rating-comp [starType]="'svg'" [rating]="post.rating"></star-rating-comp>
+              <p class="card-cat">
+                <b>Category:</b>{{post.category}}</p>
+              <section *ngIf="role == 'admin'">
+                <button mat-raised-button color="warn" (click)="deleteBook(post._id)">Delete</button>
+                <button mat-raised-button color="primary" [routerLink]="['/add']" [queryParams]="{ id : post._id}" routerLinkActive="active"
+                  [routerLinkActiveOptions]="{exact: true}">Update</button>
+                <button mat-raised-button color="warn" [routerLink]="['/book']" [queryParams]="{ id : post._id}" routerLinkActive="active"
+                  [routerLinkActiveOptions]="{exact: true}">View</button>
+              </section>
+              <section *ngIf="role == 'user'">
+                  <div *ngFor = "let u of post.user">
+                      <p>From date: {{u.from}}</p>
+                      <p>To date: {{u.to}}</p>
+                      <p>Due Dates: {{u.remain}}</p>
+                      <button mat-raised-button color="primary" [disabled] ="u.email === user.email" (click)="BarrowBook(post._id, post.isbn, user.email)">{{u.email === user.email ? 'Barrowed': 'Barrow'}}</button>
+                  </div>
+              </section>
+         </div>
+      </mat-card>
+    </mat-list>
+  </div>
+</div>

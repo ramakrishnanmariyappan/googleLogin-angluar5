@@ -1,0 +1,51 @@
+<app-header></app-header>
+<div fxLayout="row" fxLayoutAlign="center">
+  <form [formGroup]="postAdd" (ngSubmit)="OnSubmit()">
+    <div fxLayout="row">
+      <div fxFlex="48%" class="form-space">
+        <mat-form-field>
+          <input matInput placeholder="Name" formControlName='title'>
+          <mat-error *ngIf="title.invalid">{{getErrorTitle()}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="48%" class="form-space">
+        <mat-form-field>
+          <input matInput placeholder="Author" formControlName='author'>
+          <mat-error *ngIf="title.invalid">{{getErrorAuthor()}}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayout="row">
+      <div fxFlex="48%" class="form-space">
+        <mat-form-field>
+          <input matInput placeholder="ISBN" formControlName='isbn'>
+          <mat-error *ngIf="body.invalid">{{getErrorISBN()}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="48%" class="form-space">
+        <mat-form-field>
+          <input matInput placeholder="Description" formControlName='description'>
+          <mat-error *ngIf="body.invalid">{{getErrorDescription()}}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayout="row">
+      <div fxFlex="48%" class="form-space">
+        <mat-form-field>
+          <input matInput placeholder="Category" formControlName='category'>
+          <mat-error *ngIf="body.invalid">{{getErrorCategory()}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="48%" class="form-space">
+        <mat-form-field>
+          <input matInput placeholder="Book Image Path" formControlName='image'>
+          <mat-error *ngIf="body.invalid">{{getErrorImage()}}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayout="row" >
+      <button fxFlex="40%" class="form-space" mat-raised-button color="primary" type="submit" [disabled]=!postAdd.valid>{{operation}} Book</button>
+      <button fxFlex="40%" class="form-space" mat-raised-button type='button' (click)='createForm()'>Reset</button>
+    </div>
+  </form>
+</div>

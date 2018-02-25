@@ -1,0 +1,19 @@
+<ul class="menu" *ngIf="user != null">
+  <li><img [src]="user.photoUrl" alt=""></li>
+  <li><p>{{user.name}}</p></li>
+  <li>
+    <a routerLink='/viewbooks' routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">View Books</a>
+  </li>
+  <li *ngIf="role != 'user'">
+    <a routerLink='/add' routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Add Books</a>
+  </li>
+  <li *ngIf="role == 'user'">
+    <a routerLink='/userposts' routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">User Posts</a>
+  </li>
+  <li *ngIf="role == 'user'">
+    <a routerLink='/favorite' routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Favorites</a>
+  </li>
+  <li *ngIf="loggedIn == true">
+    <a (click)='signOut()' href="https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:4200">Logout</a>
+  </li>
+</ul>

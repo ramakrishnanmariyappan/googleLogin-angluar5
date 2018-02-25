@@ -1,0 +1,72 @@
+<app-header></app-header>
+<ul fxLayoutAlign="center" fxLayout="row">
+    <li class="searchField" fxFlex="40%">
+        <input type="text" id="search" class="searchBox" (keyup)="onChange($event.target.value)" placeholder="search title, author name here">
+    </li>
+    <li>
+        <mat-form-field>
+            <mat-select placeholder="Select Category">
+                <mat-option *ngFor="let sort of posts" [value]="sort.category" (click)="onCategorySelect(sort.category)">
+                    {{ sort.category }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </li>
+</ul>
+<div fxLayout="row" fxLayoutWrap>
+    <div fxLayoutAlign="center" fxFlexFill>
+        <mat-list fxFlex>
+            <mat-card *ngFor="let post of (userposts | name : searchResult | filter: categoryResult)" class="cardList">
+                <figure fxFlex>
+                    <img src="{{post.image}}" alt="">
+                </figure>
+                <div fxFlex="80%">
+                    <h4 class="card-title">
+                        <b>Title:</b>{{ post.title }}</h4>
+                    <h6 class="card-author">
+                        <b>Author:</b>{{post.author}}</h6>
+                    <p class="card-isbn">
+                        <b>ISBN:</b>{{post.isbn}}</p>
+                    <p class="card-desc">
+                        <b>Description:</b>{{post.description}}</p>
+                    <p class="card-cat">
+                        <b>Category:</b>{{post.category}}</p>
+                    <div *ngFor="let u of post.user">
+                        <ul class="userDetails">
+                            <li>From date: {{u.from}}</li>
+                            <li>To date: {{u.to}}</li>
+                            <li>Due Dates: {{u.remain}}</li>
+                            <li></li>
+                        </ul>
+                        <button mat-raised-button color="primary" (click)="ReturnBook(post._id, u.isbn, user.email)"> Return Book </button>
+                        <button *ngIf="u.favorite === false" mat-raised-button color="primary" (click)="FavoriteBook(post._id, user.email)"> Favorite </button>
+                        <button *ngIf="u.favorite === true" [disabled]="u.favorite === true" mat-raised-button color="primary"> Favorited </button>
+                    </div>
+                    <form [formGroup]="postAdd" (ngSubmit)="OnSubmit(post._id)">
+                        <div class="form-group">
+                            <label for="message" class="col-sm-2 control-label">Add your comments: </label>
+                            <div class="col-sm-6">
+                                <textarea class="form-control" required name="comment" rows="4" placeholder="Add your commments" formControlName='comment'></textarea>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" required name="commented_by" rows="4" placeholder="Commentor Name" formControlName='commented_by'
+                                />
+                            </div>
+                        </div>
+                        <div class="from-group">
+                            <star-rating-comp [starType]="'svg'" [rating]="rating" formControlName="rating"></star-rating-comp>
+                        </div>
+                        <div class="form-group">
+                            <div class="">
+                                <button type="submit" class="btn btn-primary" [disabled]=!postAdd.valid>Submit Comment</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+            <mat-card *ngIf="userposts.length == 0">
+                <p class="noDataFound">There is No data found</p>
+            </mat-card>
+        </mat-list>
+    </div>
+</div>

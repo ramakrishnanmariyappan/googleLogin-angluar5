@@ -1,0 +1,66 @@
+<app-header></app-header>
+<ul fxLayoutAlign="center" fxLayout="row">
+  <li class="searchField" fxFlex="40%">
+    <input type="text" id="search" class="searchBox" (keyup)="onChange($event.target.value)" placeholder="search title, author name here">
+  </li>
+  <li>
+    <mat-form-field>
+      <mat-select placeholder="Select Category">
+        <mat-option *ngFor="let sort of posts" [value]="sort.category" (click)="onCategorySelect(sort.category)">
+          {{ sort.category }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </li>
+</ul>
+<div fxLayout="row" fxLayoutWrap>
+  <div fxLayoutAlign="center" fxFlexFill>
+    <mat-list fxFlex class="books">
+      <mat-card *ngFor="let post of (posts | name : searchResult | filter: categoryResult)" class="cardList">
+        <figure fxFlex>
+          <img src="{{post.image}}" alt="">
+        </figure>
+        <div fxFlex="80%">
+          <h4 class="card-title">
+            <b>Title:</b>{{ post.title }}</h4>
+          <p class="card-desc">
+            <b>Description:</b>{{post.description}}</p>
+          <ul class="bookDetils">
+            <li>
+              <b>Author:</b>{{post.author}}</li>
+            <li>
+              <b>ISBN:</b>{{post.isbn}}</li>
+            <li>
+              <b>Category:</b>{{post.category}}</li>
+          </ul>
+          <section *ngIf="role == 'admin'">
+            <button mat-raised-button color="warn" (click)="deleteBook(post._id)">Delete</button>
+            <button mat-raised-button color="primary" [routerLink]="['/add']" [queryParams]="{ id : post._id}" routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}">Update</button>
+            <button mat-raised-button color="warn" [routerLink]="['/book']" [queryParams]="{ id : post._id}" routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}">View</button>
+          </section>
+          <section *ngIf="role == 'user'">
+            <div *ngFor="let u of post.user">
+              <button mat-raised-button color="primary" [disabled]="u.email === user.email">Barrowed</button>
+            </div>
+            <button *ngIf='post.user.length === 0' mat-raised-button color="primary" (click)="BarrowBook(post._id, post.isbn, user.email)">Barrow</button>
+          </section>
+          <section *ngIf="post.comments.length >= 1">
+            <h4>Comments</h4>
+            <hr>
+            <div *ngFor="let c of post.comments">
+              <p>Comment: {{c.comment}}</p>
+              <p>Commented by: {{c.commented_by}}</p>
+              <p>Date: {{c.date}}</p>
+              <star-rating-comp [starType]="'svg'" [rating]="c.rating" [disabled] ="true"></star-rating-comp>
+            </div>
+          </section>
+        </div>
+      </mat-card>
+      <mat-card *ngIf="posts.length == 0">
+        <p class="noDataFound">There is No data found</p>
+      </mat-card>
+    </mat-list>
+  </div>
+</div>
